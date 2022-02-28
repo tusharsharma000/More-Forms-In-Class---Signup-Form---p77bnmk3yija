@@ -2,94 +2,94 @@ import React, { Component, useState } from "react";
 import "../styles/App.css";
 
 const App = () => {
-  const inputfields = {
+  const st = {
     name: "",
     email: "",
+    password: "",
     gender: "male",
-    phone: "",
-    password: ""
+    phone: ""
   };
-  const [formvalue, setFormValue] = useState(inputfields);
-  const [validate, setValidate] = useState("");
-  const handlechange = (e) => {
-    const { name, values } = e.target;
-    setFormValue({ ...formvalue, [name]: values });
-  };
+  const [formState, setFormState] = React.useState(st);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const [message, setMessage] = React.useState("");
+
+  const handleSubmit = () => {
+    console.log(formState);
     if (
-      formvalue.name === "" ||
-      formvalue.email === "" ||
-      formvalue.password === "" ||
-      formvalue.phone === "" ||
-      formvalue.gender === ""
+      formState.name === "" ||
+      formState.email === "" ||
+      formState.password === "" ||
+      formState.phone === "" ||
+      formState.gender === ""
     ) {
-      setValidate("All fields are mandatory");
-    } else if (!formvalue.name.match(/^[a-zA-Z0-9]+$/)) {
-      setValidate("Name is not alphanumeric");
-    } else if (!formvalue.email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]/)) {
-      setValidate("Email must contain @");
+      setMessage("All fields are mandatory");
+      return;
+    } else if (!formState.name.match(/^[a-zA-Z0-9_ ]*$/)) {
+      setMessage("Name is not alphanumeric");
+    } else if (!formState.email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]/)) {
+      setMessage("Email must contain @");
     } else if (
-      formvalue.gender !== "male" ||
-      formvalue.gender !== "female" ||
-      formvalue.gender !== "other"
+      formState.gender !== "male" &&
+      formState.gender !== "female" &&
+      formState.gender !== "others"
     ) {
-      setValidate("Please identify as male, female or others");
-    } else if (!formvalue.phone.match(/^[0-9]*$/)) {
-      setValidate("Phone Number must contain only numbers");
-    } else if (formvalue.password.length < 6) {
-      setValidate("Password must contain atleast 6 letters");
+      setMessage("Please identify as male, female or others");
+    } else if (!formState.phone.match(/^[0-9]*$/)) {
+      setMessage("Phone Number must contain only numbers");
+    } else if (formState.password.length < 6) {
+      setMessage("Password must contain atleast 6 letters");
     } else {
-      setValidate(`Hello {formvalue.email.split("@")[0]}`);
+      setMessage(`Hello ${formState.email.split("@")[0]}`);
     }
   };
-
   return (
     <div id="main">
-      <form onSubmit={handleSubmit}>
-        Name:
-        <input
-          type="text"
-          data-testid="name"
-          name="name"
-          value={formvalue.name}
-          onChange={handlechange}
-        />
-        Email:
-        <input
-          type="email"
-          data-testid="email"
-          name="email"
-          value={formvalue.email}
-          onChange={handlechange}
-        />
-        Gender:
-        <input
-          type="text"
-          data-testid="gender"
-          value={formvalue.gender}
-          onChange={handlechange}
-        />
-        Phone Number:
-        <input
-          type="number"
-          data-testid="phoneNumber"
-          name="phone"
-          value={formvalue.phone}
-          onChange={handlechange}
-        />
-        Password:
-        <input
-          type="password"
-          data-testid="password"
-          name="password"
-          value={formvalue.password}
-          onChange={handlechange}
-        />
-        <button type="submit">Submit</button>
-      </form>
-      <p>{validate}</p>
+      Name:{" "}
+      <input
+        type="text"
+        value={formState.name}
+        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+        data-testid="name"
+      />
+      Email:{" "}
+      <input
+        type="text"
+        value={formState.email}
+        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+        data-testid="email"
+      />
+      Gender:
+      <input
+        data-testid="gender"
+        type="text"
+        value={formState.gender}
+        onChange={(e) => setFormState({ ...formState, gender: e.target.value })}
+      />
+      Phone Number:
+      <input
+        data-testid="phoneNumber"
+        type="text"
+        value={formState.phone}
+        onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+      />
+      Password:
+      <input
+        data-testid="password"
+        type="password"
+        value={formState.password}
+        onChange={(e) =>
+          setFormState({ ...formState, password: e.target.value })
+        }
+      />
+      <button
+        data-testid="submit"
+        type="submit"
+        value="Submit"
+        onClick={handleSubmit}
+      >
+        Submit
+      </button>
+      <p>{message}</p>
     </div>
   );
 };
